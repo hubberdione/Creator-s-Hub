@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { DragDropContext, DropResult } from '@hello-pangea/dnd'
 import { supabase, Category, Link } from '@/lib/supabase'
 import CategoryCard from './CategoryCard'
 import AddLinkModal from './AddLinkModal'
@@ -26,9 +27,43 @@ export default function CreatorHub() {
     setLoading(false)
   }, [])
 
-  useEffect(() => {
-    fetchData()
-  }, [fetchData])
+  useEffect(() => { fetchData() }, [fetchData])
+
+  function onDragEnd(result: DropResult) {
+    const { destination, source, draggableId } = result
+    if (!destination) return
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return
+
+    const newLinks = links.map(l => ({ ...l }))
+    const movedLink = newLinks.find(l => l.id === draggableId)!
+
+    const srcLinks = newLinks
+      .filter(l => l.category_id === source.droppableId && l.id !== draggableId)
+      .sort((a, b) => a.position - b.position)
+
+    if (source.droppableId === destination.droppableId) {
+      srcLinks.splice(destination.index, 0, movedLink)
+      srcLinks.forEach((l, i) => { l.position = i })
+      setLinks(newLinks)
+      syncPositions(srcLinks)
+    } else {
+      movedLink.category_id = destination.droppableId
+      const destLinks = newLinks
+        .filter(l => l.category_id === destination.droppableId && l.id !== draggableId)
+        .sort((a, b) => a.position - b.position)
+      destLinks.splice(destination.index, 0, movedLink)
+      srcLinks.forEach((l, i) => { l.position = i })
+      destLinks.forEach((l, i) => { l.position = i })
+      setLinks(newLinks)
+      syncPositions([...srcLinks, ...destLinks])
+    }
+  }
+
+  async function syncPositions(toUpdate: Link[]) {
+    await Promise.all(toUpdate.map(l =>
+      supabase.from('links').update({ category_id: l.category_id, position: l.position }).eq('id', l.id)
+    ))
+  }
 
   async function addLink(categoryId: string, url: string, description: string) {
     const position = links.filter(l => l.category_id === categoryId).length
@@ -44,17 +79,6 @@ export default function CreatorHub() {
   async function deleteLink(id: string) {
     await supabase.from('links').delete().eq('id', id)
     setLinks(prev => prev.filter(l => l.id !== id))
-  }
-
-  async function moveLink(linkId: string, newCategoryId: string) {
-    const position = links.filter(l => l.category_id === newCategoryId).length
-    const { data, error } = await supabase
-      .from('links')
-      .update({ category_id: newCategoryId, position })
-      .eq('id', linkId)
-      .select()
-      .single()
-    if (!error && data) setLinks(prev => prev.map(l => l.id === linkId ? data : l))
   }
 
   function handleShare() {
@@ -77,7 +101,6 @@ export default function CreatorHub() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-fuchsia-50">
-      {/* Header */}
       <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-rose-100/60">
         <div className="max-w-xl mx-auto px-4 py-4 flex items-center justify-between">
           <div>
@@ -109,7 +132,6 @@ export default function CreatorHub() {
         </div>
       </header>
 
-      {/* Main content */}
       <main className="max-w-xl mx-auto px-4 py-6 space-y-4 pb-12">
         {isViewOnly && (
           <div className="flex items-center justify-center gap-2 bg-rose-50 border border-rose-200 rounded-2xl px-4 py-3 text-sm text-rose-500 font-medium">
@@ -121,18 +143,20 @@ export default function CreatorHub() {
           </div>
         )}
 
-        {categories.map(category => (
-          <CategoryCard
-            key={category.id}
-            category={category}
-            links={links.filter(l => l.category_id === category.id)}
-            allCategories={categories}
-            isViewOnly={isViewOnly}
-            onAddLink={() => setAddingToCategory(category.id)}
-            onDeleteLink={deleteLink}
-            onMoveLink={moveLink}
-          />
-        ))}
+        <DragDropContext onDragEnd={onDragEnd}>
+          {categories.map(category => (
+            <CategoryCard
+              key={category.id}
+              category={category}
+              links={links
+                .filter(l => l.category_id === category.id)
+                .sort((a, b) => a.position - b.position)}
+              isViewOnly={isViewOnly}
+              onAddLink={() => setAddingToCategory(category.id)}
+              onDeleteLink={deleteLink}
+            />
+          ))}
+        </DragDropContext>
       </main>
 
       {addingToCategory && (

@@ -1,30 +1,21 @@
 'use client'
 
+import { Droppable } from '@hello-pangea/dnd'
 import { Category, Link } from '@/lib/supabase'
 import LinkItem from './LinkItem'
 
 type Props = {
   category: Category
   links: Link[]
-  allCategories: Category[]
   isViewOnly: boolean
   onAddLink: () => void
   onDeleteLink: (id: string) => void
-  onMoveLink: (linkId: string, categoryId: string) => void
 }
 
-export default function CategoryCard({
-  category,
-  links,
-  allCategories,
-  isViewOnly,
-  onAddLink,
-  onDeleteLink,
-  onMoveLink,
-}: Props) {
+export default function CategoryCard({ category, links, isViewOnly, onAddLink, onDeleteLink }: Props) {
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-      {/* Card header */}
+      {/* Header */}
       <div
         className="px-5 py-4 flex items-center justify-between"
         style={{ backgroundColor: category.color ?? '#fff1f2' }}
@@ -38,7 +29,6 @@ export default function CategoryCard({
             </p>
           </div>
         </div>
-
         {!isViewOnly && (
           <button
             onClick={onAddLink}
@@ -52,27 +42,35 @@ export default function CategoryCard({
         )}
       </div>
 
-      {/* Links list */}
-      <div className="divide-y divide-gray-50">
-        {links.length === 0 ? (
-          <div className="px-5 py-8 text-center">
-            <p className="text-sm text-gray-400">
-              {isViewOnly ? 'No references yet' : 'No references yet — add one above'}
-            </p>
+      {/* Droppable link list */}
+      <Droppable droppableId={category.id}>
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+            className={`divide-y divide-gray-50 min-h-[4rem] transition-colors duration-150 ${
+              snapshot.isDraggingOver ? 'bg-rose-50/60' : ''
+            }`}
+          >
+            {links.length === 0 && !snapshot.isDraggingOver ? (
+              <div className="px-5 py-8 text-center text-sm text-gray-400">
+                {isViewOnly ? 'No references yet' : 'No references yet — add one above'}
+              </div>
+            ) : (
+              links.map((link, index) => (
+                <LinkItem
+                  key={link.id}
+                  link={link}
+                  index={index}
+                  isViewOnly={isViewOnly}
+                  onDelete={() => onDeleteLink(link.id)}
+                />
+              ))
+            )}
+            {provided.placeholder}
           </div>
-        ) : (
-          links.map(link => (
-            <LinkItem
-              key={link.id}
-              link={link}
-              allCategories={allCategories}
-              isViewOnly={isViewOnly}
-              onDelete={() => onDeleteLink(link.id)}
-              onMove={(catId) => onMoveLink(link.id, catId)}
-            />
-          ))
         )}
-      </div>
+      </Droppable>
     </div>
   )
 }
