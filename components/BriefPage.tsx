@@ -442,14 +442,9 @@ export default function BriefPage({ onEnter }: Props) {
                 <div className="divide-y divide-[#1e1e2e]">
                   {[
                     {
-                      icon: '🍑',
-                      title: 'The "Censored" Prop',
-                      body: 'Hold a prop with a funny sticker (peach 🍑 or banana 🍌) instead of the actual product on camera. Builds curiosity and keeps TikTok/Reels happy.',
-                    },
-                    {
                       icon: '🎭',
-                      title: 'Let Them Be Themselves',
-                      body: 'Don\'t over-direct. The funniest, most shareable moments come from real, unfiltered reactions — just ask the question and get out of the way.',
+                      title: 'Be Yourself',
+                      body: 'Your personality is the content. Don\'t overthink it — the funniest, most shareable moments come from you being totally, unapologetically you.',
                     },
                     {
                       icon: '✂️',
