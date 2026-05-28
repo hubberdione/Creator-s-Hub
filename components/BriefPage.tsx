@@ -64,11 +64,11 @@ export default function BriefPage({ onEnter }: Props) {
 
           <div className="bg-[#161616] border border-[#222] rounded-2xl px-4 py-4">
             <div className="flex items-start gap-3">
-              <span className="text-xl mt-0.5">👀</span>
+              <span className="text-xl mt-0.5">✨</span>
               <div>
-                <p className="text-sm font-bold text-[#f0ebe3] mb-1">You're an Attendee — Act Like One</p>
+                <p className="text-sm font-bold text-[#f0ebe3] mb-1">Soak Up the Whole Venue</p>
                 <p className="text-xs text-[#666] leading-relaxed">
-                  Walk the venue freely. React naturally to what you see. Visit the <span className="text-[#f0ebe3] font-bold">Hello Nancy Booth</span> and create content about it — your honest reaction is the content.
+                  You're here as a guest — so explore freely and enjoy it! Wander, discover, and make sure to swing by the <span className="text-[#f0ebe3] font-bold">Hello Nancy Booth</span>. Your genuine excitement and reactions are what make great content.
                 </p>
               </div>
             </div>
@@ -78,9 +78,9 @@ export default function BriefPage({ onEnter }: Props) {
             <div className="flex items-start gap-3">
               <span className="text-xl mt-0.5">🤝</span>
               <div>
-                <p className="text-sm font-bold text-[#f0ebe3] mb-1">Brainstorm With Your Team</p>
+                <p className="text-sm font-bold text-[#f0ebe3] mb-1">Create Together, Shine Together</p>
                 <p className="text-xs text-[#666] leading-relaxed">
-                  You're split into <span className="text-[#f0ebe3] font-bold">2 teams</span>. Use the 9–10AM session to plan together — what angles are you covering? How can you support each other's content?
+                  You're part of one of <span className="text-[#f0ebe3] font-bold">2 creator teams</span>! Kick off the day brainstorming together — share ideas, plan your angles, and find ways to hype each other's content throughout the day.
                 </p>
               </div>
             </div>
@@ -90,9 +90,9 @@ export default function BriefPage({ onEnter }: Props) {
             <div className="flex items-start gap-3">
               <span className="text-xl mt-0.5">🎬</span>
               <div>
-                <p className="text-sm font-bold text-[#f0ebe3] mb-1">Product Demo Videos</p>
+                <p className="text-sm font-bold text-[#f0ebe3] mb-1">Show It Off!</p>
                 <p className="text-xs text-[#666] leading-relaxed">
-                  Think CES-style demo but at the venue — show the product with real attendees around you. Natural, energetic, unscripted. Reference scripts in the next page will help.
+                  Bring the LEM product to life with real people around you — think CES-style energy but at a swim week! Keep it natural and fun. The reference scripts on the next page have great starting points to inspire you.
                 </p>
               </div>
             </div>
@@ -102,9 +102,9 @@ export default function BriefPage({ onEnter }: Props) {
             <div className="flex items-start gap-3">
               <span className="text-xl mt-0.5">🎤</span>
               <div>
-                <p className="text-sm font-bold text-[#f0ebe3] mb-1">Interview Attendees</p>
+                <p className="text-sm font-bold text-[#f0ebe3] mb-1">Get People Talking!</p>
                 <p className="text-xs text-[#666] leading-relaxed">
-                  Ask people questions on camera — reactions, opinions, style. Target interesting guests who look like they'd give good energy. Scripts with example questions are in the next page.
+                  Strike up fun conversations on camera — ask attendees about their style, their faves, what they're loving about the event. The best interviews feel like chats between friends. Scripts with question ideas are waiting inside!
                 </p>
               </div>
             </div>
@@ -112,11 +112,11 @@ export default function BriefPage({ onEnter }: Props) {
 
           <div className="bg-[#161616] border border-[#222] rounded-2xl px-4 py-4">
             <div className="flex items-start gap-3">
-              <span className="text-xl mt-0.5">🎯</span>
+              <span className="text-xl mt-0.5">🌟</span>
               <div>
-                <p className="text-sm font-bold text-[#f0ebe3] mb-1">Know Who to Target</p>
+                <p className="text-sm font-bold text-[#f0ebe3] mb-1">Find Your People</p>
                 <p className="text-xs text-[#666] leading-relaxed">
-                  Not everyone is a good subject. Look for guests who are expressive, well-dressed, or clearly engaged with the event. Find those people — they'll make your content pop.
+                  The best content comes from guests who are lit up about being here — expressive, stylish, and having the best time. When you spot that energy, go for it! Those are your people.
                 </p>
               </div>
             </div>
