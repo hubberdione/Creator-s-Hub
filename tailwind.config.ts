@@ -7,7 +7,11 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['"Trebuchet MS"', 'Trebuchet', 'Arial', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }

@@ -46,40 +46,41 @@ export default function GalleryItem({ link, isViewOnly, onDelete, onEdit, onPrev
   }
 
   return (
-    <div className={`flex-shrink-0 transition-all duration-200 ${editing ? 'w-[170px]' : 'w-[90px]'}`}
-         style={{ scrollSnapAlign: 'start' }}>
-
-      {/* Thumbnail — portrait 9:16 */}
+    <div
+      className="flex-shrink-0 transition-all duration-200"
+      style={{ width: editing ? 160 : 78, scrollSnapAlign: 'start' } as React.CSSProperties}
+    >
+      {/* Portrait thumbnail */}
       <button
         onClick={() => !editing && onPreview(link)}
         disabled={editing}
-        className="relative w-full block overflow-hidden rounded-2xl bg-gradient-to-br from-rose-100 to-pink-100"
+        className="relative w-full block overflow-hidden rounded-xl bg-[#222]"
         style={{ aspectRatio: '9/16' }}
       >
+        {/* Shimmer */}
+        {!imgLoaded && !imgError && (
+          <div className="absolute inset-0 bg-[#222] animate-pulse" />
+        )}
+
         {!imgError ? (
-          <>
-            {!imgLoaded && (
-              <div className="absolute inset-0 bg-gradient-to-br from-rose-100 to-pink-100 animate-pulse" />
-            )}
-            <img
-              src={info.thumb}
-              alt=""
-              onLoad={() => setImgLoaded(true)}
-              onError={() => setImgError(true)}
-              className={`w-full h-full object-cover transition-opacity duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
-            />
-          </>
+          <img
+            src={info.thumb}
+            alt=""
+            onLoad={() => setImgLoaded(true)}
+            onError={() => setImgError(true)}
+            className={`w-full h-full object-cover transition-opacity duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+          />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#ff2d78] to-[#c2185b] flex items-center justify-center">
             <svg className="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
             </svg>
           </div>
         )}
 
-        {/* Play badge — always visible, bottom-left corner */}
+        {/* Play badge — always visible bottom-left */}
         {!editing && (
-          <div className="absolute bottom-1.5 left-1.5 w-5 h-5 rounded-full bg-black/50 flex items-center justify-center">
+          <div className="absolute bottom-1.5 left-1.5 w-5 h-5 rounded-full bg-black/60 flex items-center justify-center">
             <svg className="w-2.5 h-2.5 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">
               <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
             </svg>
@@ -96,38 +97,38 @@ export default function GalleryItem({ link, isViewOnly, onDelete, onEdit, onPrev
               value={editDesc}
               onChange={e => setEditDesc(e.target.value)}
               placeholder="Description"
-              className="w-full text-[11px] font-semibold border border-rose-300 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-rose-200 text-gray-900"
+              className="w-full text-[11px] font-bold bg-[#1a1a1a] border border-[#333] rounded-lg px-2 py-1.5 focus:outline-none focus:border-[#ff2d78] text-[#f0ebe3] placeholder:text-[#555]"
             />
             <input
               value={editUrl}
               onChange={e => setEditUrl(e.target.value)}
               placeholder="URL"
-              className="w-full text-[11px] border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none text-gray-600"
+              className="w-full text-[11px] bg-[#1a1a1a] border border-[#333] rounded-lg px-2 py-1.5 focus:outline-none focus:border-[#555] text-[#888] placeholder:text-[#444]"
             />
             <div className="flex gap-1">
               <button onClick={handleSave} disabled={saving}
-                className="flex-1 text-[11px] font-semibold bg-rose-500 text-white py-1.5 rounded-lg disabled:opacity-50">
+                className="flex-1 text-[11px] font-bold bg-[#ff2d78] text-white py-1.5 rounded-lg disabled:opacity-50">
                 {saving ? '…' : 'Save'}
               </button>
               <button onClick={() => setEditing(false)}
-                className="flex-1 text-[11px] text-gray-500 py-1.5 rounded-lg border border-gray-200">
+                className="flex-1 text-[11px] font-bold text-[#555] py-1.5 rounded-lg border border-[#2a2a2a]">
                 Cancel
               </button>
             </div>
           </div>
         ) : (
           <>
-            <p className="text-[11px] font-semibold text-gray-900 line-clamp-2 leading-snug">{link.description}</p>
+            <p className="text-[10px] font-bold text-[#888] line-clamp-2 leading-snug">{link.description}</p>
             {!isViewOnly && (
               <div className="flex items-center gap-0.5 mt-1">
                 <button onClick={() => setEditing(true)}
-                  className="p-0.5 rounded text-gray-300 hover:text-rose-500 transition-colors" title="Edit">
+                  className="p-0.5 rounded text-[#444] hover:text-[#b8ff3a] transition-colors" title="Edit">
                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </button>
                 <button onClick={handleDelete} disabled={deleting}
-                  className="p-0.5 rounded text-gray-300 hover:text-red-500 transition-colors disabled:opacity-40" title="Delete">
+                  className="p-0.5 rounded text-[#444] hover:text-[#ff2d78] transition-colors disabled:opacity-40" title="Delete">
                   {deleting ? (
                     <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>

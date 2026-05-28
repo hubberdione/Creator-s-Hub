@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Trebuchet MS', Trebuchet, Arial, sans-serif;
+  }
+  body {
+    background-color: #0d0d0d;
+    color: #f0ebe3;
+  }
+  /* Hide scrollbars on gallery rows while keeping scroll */
+  .gallery-scroll::-webkit-scrollbar { display: none; }
+  .gallery-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+}

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Draggable } from '@hello-pangea/dnd'
 import { Link } from '@/lib/supabase'
+import { getLinkInfo } from '@/lib/linkInfo'
 
 type Props = {
   link: Link
@@ -11,8 +12,6 @@ type Props = {
   onDelete: () => void
   onEdit: (id: string, description: string, url: string) => Promise<void>
 }
-
-import { getLinkInfo } from '@/lib/linkInfo'
 
 function shortUrl(url: string) {
   try {
@@ -30,17 +29,14 @@ export default function LinkItem({ link, index, isViewOnly, onDelete, onEdit }: 
   const [imgError, setImgError] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
-  // Edit state
   const [editing, setEditing] = useState(false)
   const [editDesc, setEditDesc] = useState(link.description)
   const [editUrl, setEditUrl]   = useState(link.url)
   const [saving, setSaving]     = useState(false)
   const descRef = useRef<HTMLInputElement>(null)
 
-  // Recompute info when URL changes (edit saved)
   const info = getLinkInfo(link.url)
 
-  // Reset thumbnail states if URL changes after edit
   useEffect(() => {
     setImgLoaded(false)
     setImgError(false)
@@ -77,18 +73,18 @@ export default function LinkItem({ link, index, isViewOnly, onDelete, onEdit }: 
           {...provided.draggableProps}
           className={`transition-all ${
             snapshot.isDragging
-              ? 'bg-white shadow-2xl shadow-rose-100 rounded-2xl ring-2 ring-rose-300 z-50'
+              ? 'bg-[#1e1e1e] shadow-2xl rounded-2xl ring-1 ring-[#ff2d78]/40 z-50'
               : ''
           }`}
         >
           {/* Main row */}
-          <div className="flex items-center gap-2 hover:bg-gray-50/50 transition-colors">
+          <div className="flex items-center gap-2 hover:bg-[#1a1a1a]/60 transition-colors">
 
-            {/* Drag handle — hidden while editing */}
+            {/* Drag handle */}
             {!isViewOnly && !editing && (
               <div
                 {...provided.dragHandleProps}
-                className="flex-shrink-0 pl-4 py-4 text-gray-300 hover:text-gray-400 cursor-grab active:cursor-grabbing"
+                className="flex-shrink-0 pl-4 py-4 text-[#333] hover:text-[#555] cursor-grab active:cursor-grabbing"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <circle cx="9" cy="5" r="1.5" /><circle cx="15" cy="5" r="1.5" />
@@ -97,7 +93,6 @@ export default function LinkItem({ link, index, isViewOnly, onDelete, onEdit }: 
                 </svg>
               </div>
             )}
-            {/* Spacer when editing so layout doesn't shift */}
             {!isViewOnly && editing && <div className="w-4 pl-4 flex-shrink-0" />}
 
             {/* Thumbnail */}
@@ -105,12 +100,12 @@ export default function LinkItem({ link, index, isViewOnly, onDelete, onEdit }: 
               <button
                 onClick={() => !editing && info.embedUrl && setShowEmbed(v => !v)}
                 disabled={editing || !info.embedUrl}
-                className="relative w-[72px] h-[72px] my-3 rounded-2xl overflow-hidden flex-shrink-0 group"
+                className="relative w-[64px] h-[64px] my-3 rounded-xl overflow-hidden flex-shrink-0 group"
               >
                 {!imgError ? (
                   <>
                     {!imgLoaded && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-rose-100 to-pink-100 animate-pulse" />
+                      <div className="absolute inset-0 bg-[#222] animate-pulse" />
                     )}
                     <img
                       src={info.thumb}
@@ -119,23 +114,25 @@ export default function LinkItem({ link, index, isViewOnly, onDelete, onEdit }: 
                       onError={() => setImgError(true)}
                       className={`w-full h-full object-cover transition-opacity duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
                     />
-                    {imgLoaded && info.embedUrl && !editing && (
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                        {showEmbed ? (
-                          <svg className="w-4 h-4 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        ) : (
-                          <svg className="w-6 h-6 text-white drop-shadow ml-0.5" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                          </svg>
-                        )}
+                    {info.embedUrl && !editing && (
+                      <div className="absolute inset-0 flex items-end justify-start p-1">
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${showEmbed ? 'bg-[#ff2d78]/80' : 'bg-black/55'}`}>
+                          {showEmbed ? (
+                            <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          ) : (
+                            <svg className="w-2.5 h-2.5 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                            </svg>
+                          )}
+                        </div>
                       </div>
                     )}
                   </>
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center">
-                    <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="w-full h-full bg-gradient-to-br from-[#ff2d78] to-[#c2185b] flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                     </svg>
                   </div>
@@ -151,25 +148,25 @@ export default function LinkItem({ link, index, isViewOnly, onDelete, onEdit }: 
                   value={editDesc}
                   onChange={e => setEditDesc(e.target.value)}
                   placeholder="Description"
-                  className="w-full text-sm font-semibold bg-white border border-rose-300 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-rose-200 text-gray-900"
+                  className="w-full text-sm font-bold bg-[#1a1a1a] border border-[#333] rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#ff2d78] text-[#f0ebe3] placeholder:text-[#444]"
                 />
                 <input
                   value={editUrl}
                   onChange={e => setEditUrl(e.target.value)}
                   placeholder="URL"
-                  className="w-full text-xs bg-white border border-gray-200 rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-rose-100 text-gray-700"
+                  className="w-full text-xs bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#444] text-[#888] placeholder:text-[#444]"
                 />
                 <div className="flex gap-2 pt-0.5">
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="text-xs font-semibold bg-rose-500 hover:bg-rose-600 text-white px-3 py-1 rounded-lg transition-colors disabled:opacity-50"
+                    className="text-xs font-bold bg-[#ff2d78] hover:bg-[#e0265e] text-white px-3 py-1 rounded-lg transition-colors disabled:opacity-50"
                   >
                     {saving ? 'Saving…' : 'Save'}
                   </button>
                   <button
                     onClick={handleCancelEdit}
-                    className="text-xs text-gray-500 hover:text-gray-700 px-3 py-1 rounded-lg border border-gray-200 transition-colors"
+                    className="text-xs font-bold text-[#555] hover:text-[#888] px-3 py-1 rounded-lg border border-[#2a2a2a] transition-colors"
                   >
                     Cancel
                   </button>
@@ -181,33 +178,31 @@ export default function LinkItem({ link, index, isViewOnly, onDelete, onEdit }: 
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-sm font-semibold text-gray-900 leading-snug hover:text-rose-600 transition-colors line-clamp-2"
+                  className="block text-sm font-bold text-[#f0ebe3] leading-snug hover:text-[#ff2d78] transition-colors line-clamp-2"
                 >
                   {link.description}
                 </a>
-                <p className="text-xs text-gray-400 mt-1 truncate">{shortUrl(link.url)}</p>
+                <p className="text-xs text-[#555] mt-1 truncate">{shortUrl(link.url)}</p>
               </div>
             )}
 
             {/* Actions */}
             {!isViewOnly && !editing && (
               <div className="flex items-center gap-0.5 flex-shrink-0 pr-3">
-                {/* Edit */}
                 <button
                   onClick={() => setEditing(true)}
                   title="Edit"
-                  className="p-1.5 rounded-xl text-gray-300 hover:text-rose-500 hover:bg-rose-50 transition-colors"
+                  className="p-1.5 rounded-xl text-[#444] hover:text-[#b8ff3a] hover:bg-[#b8ff3a]/8 transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </button>
-                {/* Delete */}
                 <button
                   onClick={handleDelete}
                   disabled={deleting}
                   title="Delete"
-                  className="p-1.5 rounded-xl text-gray-300 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-40"
+                  className="p-1.5 rounded-xl text-[#444] hover:text-[#ff2d78] hover:bg-[#ff2d78]/8 transition-colors disabled:opacity-40"
                 >
                   {deleting ? (
                     <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">

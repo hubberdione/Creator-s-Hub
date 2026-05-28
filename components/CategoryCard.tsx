@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import React from 'react'
 import { Droppable } from '@hello-pangea/dnd'
 import { Category, Link } from '@/lib/supabase'
 import LinkItem from './LinkItem'
@@ -27,29 +26,29 @@ export default function CategoryCard({
   const [confirmDelete, setConfirmDelete] = useState(false)
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+    <div className="bg-[#161616] rounded-2xl border border-[#222] overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-4 flex items-center justify-between" style={{ backgroundColor: category.color ?? '#fff1f2' }}>
+      <div className="px-4 py-3.5 flex items-center justify-between border-b border-[#1e1e1e]">
         <div className="flex items-center gap-3">
-          <span className="text-2xl leading-none">{category.icon}</span>
+          <span className="text-xl leading-none">{category.icon}</span>
           <div>
-            <h2 className="font-bold text-gray-900 leading-tight">{category.name}</h2>
-            <p className="text-xs text-gray-500 mt-0.5">{links.length} reference{links.length !== 1 ? 's' : ''}</p>
+            <h2 className="font-bold text-[#f0ebe3] leading-tight text-sm">{category.name}</h2>
+            <p className="text-[10px] text-[#555] mt-0.5 font-bold tracking-wide">{links.length} reference{links.length !== 1 ? 's' : ''}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           {/* Delete category (manage mode) */}
           {managing && !isViewOnly && (
             confirmDelete ? (
-              <div className="flex items-center gap-1.5 bg-white/80 rounded-full px-2 py-1">
-                <span className="text-xs text-gray-600 font-medium">Delete?</span>
-                <button onClick={() => onDeleteCategory(category.id)} className="text-xs font-bold text-red-500 hover:text-red-700">Yes</button>
-                <button onClick={() => setConfirmDelete(false)} className="text-xs text-gray-400 hover:text-gray-600">No</button>
+              <div className="flex items-center gap-1.5 bg-[#1a1a1a] rounded-full px-2.5 py-1.5 border border-[#2a2a2a]">
+                <span className="text-xs text-[#888] font-bold">Delete?</span>
+                <button onClick={() => onDeleteCategory(category.id)} className="text-xs font-bold text-[#ff2d78] hover:text-red-400">Yes</button>
+                <button onClick={() => setConfirmDelete(false)} className="text-xs text-[#555] hover:text-[#888]">No</button>
               </div>
             ) : (
               <button
                 onClick={() => setConfirmDelete(true)}
-                className="w-7 h-7 rounded-full bg-white/70 hover:bg-red-50 text-gray-400 hover:text-red-500 flex items-center justify-center transition-colors"
+                className="w-7 h-7 rounded-full bg-[#1a1a1a] hover:bg-[#ff2d78]/10 text-[#555] hover:text-[#ff2d78] flex items-center justify-center transition-colors border border-[#2a2a2a]"
                 title="Delete category"
               >
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -62,9 +61,9 @@ export default function CategoryCard({
           {!isViewOnly && !managing && (
             <button
               onClick={onAddLink}
-              className="flex items-center gap-1 bg-white/70 hover:bg-white text-gray-700 text-sm font-semibold px-3 py-1.5 rounded-full transition-colors border border-white/50"
+              className="flex items-center gap-1 text-[#b8ff3a] text-xs font-bold px-3 py-1.5 rounded-full transition-colors border border-[#b8ff3a]/25 bg-[#b8ff3a]/8 hover:bg-[#b8ff3a]/15"
             >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
               </svg>
               Add
@@ -76,12 +75,12 @@ export default function CategoryCard({
       {/* Gallery view — horizontal scroll */}
       {viewMode === 'gallery' && (
         links.length === 0 ? (
-          <p className="py-8 text-center text-sm text-gray-400 px-5">
+          <p className="py-8 text-center text-xs text-[#555] font-bold tracking-wide px-5">
             {isViewOnly ? 'No references yet' : 'No references yet — switch to list view to add'}
           </p>
         ) : (
           <div
-            className="flex gap-2.5 overflow-x-auto px-3 pt-3 pb-4"
+            className="gallery-scroll flex gap-2.5 overflow-x-auto px-3 pt-3 pb-4"
             style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
           >
             {links.map(link => (
@@ -105,10 +104,10 @@ export default function CategoryCard({
             <div
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className={`divide-y divide-gray-50 min-h-[4rem] transition-colors duration-150 ${snapshot.isDraggingOver ? 'bg-rose-50/60' : ''}`}
+              className={`divide-y divide-[#1e1e1e] min-h-[4rem] transition-colors duration-150 ${snapshot.isDraggingOver ? 'bg-[#ff2d78]/5' : ''}`}
             >
               {links.length === 0 && !snapshot.isDraggingOver ? (
-                <div className="px-5 py-8 text-center text-sm text-gray-400">
+                <div className="px-5 py-8 text-center text-xs text-[#555] font-bold tracking-wide">
                   {isViewOnly ? 'No references yet' : 'No references yet — add one above'}
                 </div>
               ) : (

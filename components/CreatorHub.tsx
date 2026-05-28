@@ -110,32 +110,32 @@ export default function CreatorHub() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-fuchsia-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-rose-300 border-t-rose-500 rounded-full animate-spin" />
-          <p className="text-sm text-rose-400 font-medium">Loading references…</p>
+          <div className="w-8 h-8 border-2 border-[#333] border-t-[#ff2d78] rounded-full animate-spin" />
+          <p className="text-sm text-[#555] font-bold tracking-wide">Loading…</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-pink-50 to-fuchsia-50">
+    <div className="min-h-screen bg-[#0d0d0d]">
       {/* Header */}
-      <header className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-rose-100/60">
+      <header className="sticky top-0 z-20 bg-[#0d0d0d]/95 backdrop-blur-md border-b border-[#1e1e1e]">
         <div className="max-w-xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <div className="min-w-0">
-            <h1 className="text-lg font-bold tracking-tight text-gray-900 leading-tight">Creator Hub</h1>
-            <p className="text-xs font-medium text-rose-400">LEM Miami Swim Week</p>
+            <h1 className="text-lg font-bold tracking-tight text-[#f0ebe3] leading-tight">Creator Hub</h1>
+            <p className="text-[10px] font-bold text-[#b8ff3a] tracking-widest uppercase mt-0.5">LEM Miami Swim Week</p>
           </div>
 
           <div className="flex items-center gap-1.5 flex-shrink-0">
             {/* View toggle */}
-            <div className="flex bg-gray-100 rounded-full p-0.5">
+            <div className="flex bg-[#1a1a1a] rounded-full p-0.5">
               <button
                 onClick={() => setViewMode('list')}
                 title="List view"
-                className={`p-1.5 rounded-full transition-all ${viewMode === 'list' ? 'bg-white shadow text-gray-700' : 'text-gray-400 hover:text-gray-600'}`}
+                className={`p-1.5 rounded-full transition-all ${viewMode === 'list' ? 'bg-[#2a2a2a] text-[#f0ebe3]' : 'text-[#555] hover:text-[#888]'}`}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
@@ -144,7 +144,7 @@ export default function CreatorHub() {
               <button
                 onClick={() => setViewMode('gallery')}
                 title="Gallery view"
-                className={`p-1.5 rounded-full transition-all ${viewMode === 'gallery' ? 'bg-white shadow text-gray-700' : 'text-gray-400 hover:text-gray-600'}`}
+                className={`p-1.5 rounded-full transition-all ${viewMode === 'gallery' ? 'bg-[#2a2a2a] text-[#f0ebe3]' : 'text-[#555] hover:text-[#888]'}`}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -157,7 +157,7 @@ export default function CreatorHub() {
               <button
                 onClick={() => setManaging(v => !v)}
                 title="Manage categories"
-                className={`p-2 rounded-full transition-all ${managing ? 'bg-rose-100 text-rose-500' : 'bg-gray-100 text-gray-400 hover:text-gray-600'}`}
+                className={`p-2 rounded-full transition-all ${managing ? 'bg-[#ff2d78]/15 text-[#ff2d78]' : 'bg-[#1a1a1a] text-[#555] hover:text-[#888]'}`}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -170,7 +170,7 @@ export default function CreatorHub() {
             {!isViewOnly && (
               <button
                 onClick={handleShare}
-                className="flex items-center gap-1.5 bg-rose-500 hover:bg-rose-600 text-white text-sm font-semibold px-3 py-2 rounded-full transition-colors shadow-sm shadow-rose-200"
+                className="flex items-center gap-1.5 bg-[#ff2d78] hover:bg-[#e0265e] text-white text-sm font-bold px-3 py-2 rounded-full transition-colors"
               >
                 {copied ? (
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -190,10 +190,10 @@ export default function CreatorHub() {
         {/* Manage categories banner */}
         {managing && !isViewOnly && (
           <div className="max-w-xl mx-auto px-4 pb-3 flex items-center justify-between">
-            <p className="text-xs text-rose-500 font-medium">Tap 🗑 on any category to delete it</p>
+            <p className="text-xs text-[#888] font-bold">Tap 🗑 on any category to delete it</p>
             <button
               onClick={() => setAddingCategory(true)}
-              className="flex items-center gap-1 text-xs font-semibold bg-rose-500 text-white px-3 py-1.5 rounded-full"
+              className="flex items-center gap-1 text-xs font-bold bg-[#b8ff3a] text-[#0d0d0d] px-3 py-1.5 rounded-full"
             >
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -205,9 +205,9 @@ export default function CreatorHub() {
       </header>
 
       {/* Main content */}
-      <main className="max-w-xl mx-auto px-4 py-5 space-y-4 pb-16">
+      <main className="max-w-xl mx-auto px-4 py-5 space-y-3 pb-16">
         {isViewOnly && (
-          <div className="flex items-center justify-center gap-2 bg-rose-50 border border-rose-200 rounded-2xl px-4 py-3 text-sm text-rose-500 font-medium">
+          <div className="flex items-center justify-center gap-2 bg-[#161616] border border-[#222] rounded-2xl px-4 py-3 text-sm text-[#555] font-bold">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
