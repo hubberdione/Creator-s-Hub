@@ -10,12 +10,12 @@ type Props = {
   isViewOnly: boolean
   onAddLink: () => void
   onDeleteLink: (id: string) => void
+  onEditLink: (id: string, description: string, url: string) => Promise<void>
 }
 
-export default function CategoryCard({ category, links, isViewOnly, onAddLink, onDeleteLink }: Props) {
+export default function CategoryCard({ category, links, isViewOnly, onAddLink, onDeleteLink, onEditLink }: Props) {
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-      {/* Header */}
       <div
         className="px-5 py-4 flex items-center justify-between"
         style={{ backgroundColor: category.color ?? '#fff1f2' }}
@@ -42,7 +42,6 @@ export default function CategoryCard({ category, links, isViewOnly, onAddLink, o
         )}
       </div>
 
-      {/* Droppable link list */}
       <Droppable droppableId={category.id}>
         {(provided, snapshot) => (
           <div
@@ -64,6 +63,7 @@ export default function CategoryCard({ category, links, isViewOnly, onAddLink, o
                   index={index}
                   isViewOnly={isViewOnly}
                   onDelete={() => onDeleteLink(link.id)}
+                  onEdit={onEditLink}
                 />
               ))
             )}

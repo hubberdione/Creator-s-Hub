@@ -81,6 +81,16 @@ export default function CreatorHub() {
     setLinks(prev => prev.filter(l => l.id !== id))
   }
 
+  async function editLink(id: string, description: string, url: string) {
+    const { data, error } = await supabase
+      .from('links')
+      .update({ description, url })
+      .eq('id', id)
+      .select()
+      .single()
+    if (!error && data) setLinks(prev => prev.map(l => l.id === id ? data : l))
+  }
+
   function handleShare() {
     const url = `${window.location.origin}${window.location.pathname}?view=true`
     navigator.clipboard.writeText(url)
@@ -154,6 +164,7 @@ export default function CreatorHub() {
               isViewOnly={isViewOnly}
               onAddLink={() => setAddingToCategory(category.id)}
               onDeleteLink={deleteLink}
+              onEditLink={editLink}
             />
           ))}
         </DragDropContext>
