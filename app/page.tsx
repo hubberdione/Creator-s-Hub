@@ -1,10 +1,10 @@
 import { Suspense } from 'react'
-import CreatorHub from '@/components/CreatorHub'
+import AppWrapper from '@/components/AppWrapper'
 
 export default function Home() {
   return (
     <Suspense>
-      <CreatorHub />
+      <AppWrapper />
     </Suspense>
   )
 }
