@@ -19,7 +19,7 @@ export default function CreatorHub() {
   const [links, setLinks]           = useState<Link[]>([])
   const [loading, setLoading]       = useState(true)
 
-  const [viewMode, setViewMode]           = useState<ViewMode>('list')
+  const [viewMode, setViewMode]           = useState<ViewMode>('gallery')
   const [managing, setManaging]           = useState(false)
   const [addingToCategory, setAddingToCategory] = useState<string | null>(null)
   const [addingCategory, setAddingCategory]     = useState(false)
