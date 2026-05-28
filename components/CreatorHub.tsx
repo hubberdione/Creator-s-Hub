@@ -231,6 +231,20 @@ export default function CreatorHub({ onBack }: Props) {
 
       {/* ── Content ────────────────────────────────────────────────────────────── */}
       <main className="max-w-xl mx-auto px-4 pt-5 pb-24 space-y-4">
+
+        {/* Intro card */}
+        <div className="rounded-2xl border border-[#1e1e1e] bg-[#111] px-5 py-4 flex gap-4 items-start">
+          <span className="text-2xl flex-shrink-0 mt-0.5">💡</span>
+          <div>
+            <p className="text-sm font-black text-[#f0ebe3] leading-tight mb-1">Your vibe check, not a rulebook</p>
+            <p className="text-sm text-[#555] leading-relaxed">
+              These videos are here to inspire — not to copy. Watch, feel the energy, then{' '}
+              <span className="text-[#b8ff3a] font-bold">Nancify it</span> in your own way.
+              Not everything here is intimacy content, so take whatever fits your style and run with it 🤍
+            </p>
+          </div>
+        </div>
+
         <DragDropContext onDragEnd={onDragEnd}>
           {categories.map(category => (
             <CategoryCard
