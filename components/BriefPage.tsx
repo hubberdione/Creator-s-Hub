@@ -132,7 +132,7 @@ export default function BriefPage({ onEnter }: Props) {
                 <div>
                   <p className="text-base font-bold text-[#f0ebe3] mb-2">Create Together, Shine Together</p>
                   <p className="text-sm text-[#777] leading-relaxed">
-                    You're part of one of <span className="text-[#f0ebe3] font-bold">2 creator teams</span> — how fun is that! 🎉 Kick off the morning with a brainstorm, share ideas, divide and conquer, and cheer each other on all day long.
+                    You've got a <span className="text-[#f0ebe3] font-bold">crew of fun creators just like you</span> alongside you this week! 🎉 Feed off each other's energy, share ideas, hype each other up, and make the most of being surrounded by people who just get it.
                   </p>
                 </div>
               </div>
