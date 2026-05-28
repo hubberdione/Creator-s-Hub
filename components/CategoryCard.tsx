@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import React from 'react'
 import { Droppable } from '@hello-pangea/dnd'
 import { Category, Link } from '@/lib/supabase'
 import LinkItem from './LinkItem'
@@ -72,15 +73,18 @@ export default function CategoryCard({
         </div>
       </div>
 
-      {/* Gallery view */}
+      {/* Gallery view — horizontal scroll */}
       {viewMode === 'gallery' && (
-        <div className="p-3 grid grid-cols-2 gap-2.5">
-          {links.length === 0 ? (
-            <p className="col-span-2 py-6 text-center text-sm text-gray-400">
-              {isViewOnly ? 'No references yet' : 'No references yet — switch to list view to add'}
-            </p>
-          ) : (
-            links.map(link => (
+        links.length === 0 ? (
+          <p className="py-8 text-center text-sm text-gray-400 px-5">
+            {isViewOnly ? 'No references yet' : 'No references yet — switch to list view to add'}
+          </p>
+        ) : (
+          <div
+            className="flex gap-2.5 overflow-x-auto px-3 pt-3 pb-4"
+            style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
+          >
+            {links.map(link => (
               <GalleryItem
                 key={link.id}
                 link={link}
@@ -89,9 +93,9 @@ export default function CategoryCard({
                 onEdit={onEditLink}
                 onPreview={onPreview}
               />
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )
       )}
 
       {/* List view */}
