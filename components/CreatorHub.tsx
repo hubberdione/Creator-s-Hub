@@ -13,7 +13,7 @@ type ViewMode = 'list' | 'gallery'
 
 export default function CreatorHub() {
   const searchParams = useSearchParams()
-  const isViewOnly = searchParams.get('view') === 'true'
+  const isViewOnly = searchParams.get('edit') !== 'true'
 
   const [categories, setCategories] = useState<Category[]>([])
   const [links, setLinks]           = useState<Link[]>([])
@@ -102,7 +102,7 @@ export default function CreatorHub() {
 
   // ── Share ─────────────────────────────────────────────────────────────────────
   function handleShare() {
-    const url = `${window.location.origin}${window.location.pathname}?view=true`
+    const url = `${window.location.origin}${window.location.pathname}`
     navigator.clipboard.writeText(url)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
