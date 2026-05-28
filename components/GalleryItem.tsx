@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link } from '@/lib/supabase'
 import { getLinkInfo } from '@/lib/linkInfo'
 
