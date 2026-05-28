@@ -32,6 +32,7 @@ function shortUrl(url: string) {
 
 export default function LinkItem({ link, index, isViewOnly, onDelete }: Props) {
   const [showEmbed, setShowEmbed] = useState(false)
+  const [imgLoaded, setImgLoaded] = useState(false)
   const [imgError, setImgError] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const info = getInstagramInfo(link.url)
@@ -81,24 +82,31 @@ export default function LinkItem({ link, index, isViewOnly, onDelete }: Props) {
               >
                 {info && !imgError ? (
                   <>
+                    {/* shimmer while Thum.io generates the screenshot */}
+                    {!imgLoaded && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-rose-100 to-pink-100 animate-pulse" />
+                    )}
                     <img
                       src={info.thumb}
                       alt=""
+                      onLoad={() => setImgLoaded(true)}
                       onError={() => setImgError(true)}
-                      className="w-full h-full object-cover"
+                      className={`w-full h-full object-cover transition-opacity duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
                     />
-                    {/* play overlay */}
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
-                      {showEmbed ? (
-                        <svg className="w-4 h-4 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      ) : (
-                        <svg className="w-6 h-6 text-white drop-shadow ml-0.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                        </svg>
-                      )}
-                    </div>
+                    {/* play overlay — only show once image is ready */}
+                    {imgLoaded && (
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                        {showEmbed ? (
+                          <svg className="w-4 h-4 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        ) : (
+                          <svg className="w-6 h-6 text-white drop-shadow ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                          </svg>
+                        )}
+                      </div>
+                    )}
                   </>
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center shadow-sm shadow-rose-100">
