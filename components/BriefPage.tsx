@@ -120,7 +120,7 @@ export default function BriefPage({ onEnter }: Props) {
                 <div>
                   <p className="text-base font-bold text-[#f0ebe3] mb-2">Soak Up the Whole Venue!</p>
                   <p className="text-sm text-[#777] leading-relaxed">
-                    You're here as a guest — so explore everything and enjoy every second of it! Wander freely, discover hidden gems, and make sure to swing by the <span className="text-[#f0ebe3] font-bold">Hello Nancy Booth</span> for a fun reaction. Your real energy is what people love to watch! 💫
+                    You're part of the Hello Nancy family — so own every inch of this event! Wander freely, discover hidden gems, and make sure to swing by the <span className="text-[#f0ebe3] font-bold">Hello Nancy Booth</span> and show it some love. Your authentic energy is what people love to watch! 💫
                   </p>
                 </div>
               </div>
@@ -181,17 +181,6 @@ export default function BriefPage({ onEnter }: Props) {
               </div>
             </div>
 
-            <div className="bg-[#161616] border border-[#ff2d78]/20 rounded-2xl px-4 py-5">
-              <div className="flex items-start gap-4">
-                <span className="text-2xl mt-0.5 flex-shrink-0">🛍️</span>
-                <div>
-                  <p className="text-base font-bold text-[#f0ebe3] mb-2">"Guess What This Is?" 👀</p>
-                  <p className="text-sm text-[#777] leading-relaxed">
-                    We've got the <span className="text-[#f0ebe3] font-bold">LEM Soda Backpack</span> and cute <span className="text-[#f0ebe3] font-bold">blind bag plushies</span> to give to visitors! Film their reaction as they guess what's inside. Such a good hook 🎀
-                  </p>
-                </div>
-              </div>
-            </div>
 
           </div>
         </div>
