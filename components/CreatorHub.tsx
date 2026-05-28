@@ -11,7 +11,9 @@ import EmbedModal from './EmbedModal'
 
 type ViewMode = 'list' | 'gallery'
 
-export default function CreatorHub() {
+type Props = { onBack?: () => void }
+
+export default function CreatorHub({ onBack }: Props) {
   const searchParams = useSearchParams()
   const isViewOnly = searchParams.get('edit') !== 'true'
 
@@ -38,16 +40,13 @@ export default function CreatorHub() {
 
   useEffect(() => { fetchData() }, [fetchData])
 
-  // ── Drag & drop ───────────────────────────────────────────────────────────────
   function onDragEnd(result: DropResult) {
     const { destination, source, draggableId } = result
     if (!destination) return
     if (destination.droppableId === source.droppableId && destination.index === source.index) return
-
     const newLinks = links.map(l => ({ ...l }))
     const movedLink = newLinks.find(l => l.id === draggableId)!
     const srcLinks = newLinks.filter(l => l.category_id === source.droppableId && l.id !== draggableId).sort((a, b) => a.position - b.position)
-
     if (source.droppableId === destination.droppableId) {
       srcLinks.splice(destination.index, 0, movedLink)
       srcLinks.forEach((l, i) => { l.position = i })
@@ -68,7 +67,6 @@ export default function CreatorHub() {
     await Promise.all(toUpdate.map(l => supabase.from('links').update({ category_id: l.category_id, position: l.position }).eq('id', l.id)))
   }
 
-  // ── Links CRUD ────────────────────────────────────────────────────────────────
   async function addLink(categoryId: string, url: string, description: string) {
     const position = links.filter(l => l.category_id === categoryId).length
     const { data, error } = await supabase.from('links').insert({ category_id: categoryId, url, description, position }).select().single()
@@ -86,7 +84,6 @@ export default function CreatorHub() {
     if (!error && data) setLinks(prev => prev.map(l => l.id === id ? data : l))
   }
 
-  // ── Categories CRUD ───────────────────────────────────────────────────────────
   async function addCategory(name: string, icon: string, color: string) {
     const position = categories.length
     const { data, error } = await supabase.from('categories').insert({ name, icon, color, position }).select().single()
@@ -100,7 +97,6 @@ export default function CreatorHub() {
     setLinks(prev => prev.filter(l => l.category_id !== id))
   }
 
-  // ── Share ─────────────────────────────────────────────────────────────────────
   function handleShare() {
     const url = `${window.location.origin}${window.location.pathname}`
     navigator.clipboard.writeText(url)
@@ -111,9 +107,9 @@ export default function CreatorHub() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0d0d0d] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-[#333] border-t-[#ff2d78] rounded-full animate-spin" />
-          <p className="text-sm text-[#555] font-bold tracking-wide">Loading…</p>
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-2 border-[#1e1e1e] border-t-[#ff2d78] rounded-full animate-spin" />
+          <p className="text-sm text-[#444] font-bold tracking-widest uppercase">Loading</p>
         </div>
       </div>
     )
@@ -124,31 +120,44 @@ export default function CreatorHub() {
   return (
     <div className="min-h-screen bg-[#0d0d0d]">
 
-      {/* ── Header ─────────────────────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-20 bg-[#0d0d0d]/95 backdrop-blur-md border-b border-[#1e1e1e]">
-        <div className="max-w-xl mx-auto px-4 pt-4 pb-3">
+      {/* Thin pink accent line at very top */}
+      <div className="h-[2px] w-full bg-gradient-to-r from-[#ff2d78] via-[#ff2d78]/60 to-transparent" />
 
-          {/* Top row: brand + controls */}
-          <div className="flex items-start justify-between gap-3 mb-3">
-            <div className="min-w-0">
-              <p className="text-[10px] font-bold text-[#b8ff3a] tracking-widest uppercase mb-1">
-                Hello Nancy x Miami Swim Week
-              </p>
-              <h1 className="text-2xl font-bold tracking-tight text-[#f0ebe3] leading-tight">
-                Script Library
-              </h1>
-              <p className="text-sm text-[#444] mt-0.5">
-                {totalLinks} reference{totalLinks !== 1 ? 's' : ''} · {categories.length} categories
-              </p>
+      {/* ── Header ─────────────────────────────────────────────────────────────── */}
+      <header className="sticky top-0 z-20 bg-[#0d0d0d]/96 backdrop-blur-xl border-b border-[#1a1a1a]">
+        <div className="max-w-xl mx-auto px-4 pt-5 pb-4">
+
+          {/* Brand row */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3 min-w-0">
+              {/* Back button */}
+              {onBack && (
+                <button
+                  onClick={onBack}
+                  className="w-9 h-9 rounded-xl bg-[#1a1a1a] border border-[#222] flex items-center justify-center text-[#666] hover:text-[#f0ebe3] hover:border-[#333] active:scale-[.93] transition-all flex-shrink-0"
+                  title="Back to brief"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              )}
+              <div className="min-w-0">
+                <p className="text-[10px] font-black text-[#b8ff3a] tracking-[0.2em] uppercase">
+                  Hello Nancy x Miami Swim Week
+                </p>
+                <h1 className="text-2xl font-black tracking-tight text-[#f0ebe3] leading-none mt-1">
+                  Script Library
+                </h1>
+              </div>
             </div>
 
-            <div className="flex items-center gap-2 flex-shrink-0 pt-1">
-              {/* Manage */}
+            {/* Actions */}
+            <div className="flex items-center gap-2 flex-shrink-0">
               {!isViewOnly && (
                 <button
                   onClick={() => setManaging(v => !v)}
-                  title="Manage categories"
-                  className={`p-2 rounded-xl transition-all ${managing ? 'bg-[#ff2d78]/15 text-[#ff2d78] border border-[#ff2d78]/30' : 'bg-[#1a1a1a] text-[#555] hover:text-[#888] border border-[#222]'}`}
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all border ${managing ? 'bg-[#ff2d78]/15 text-[#ff2d78] border-[#ff2d78]/30' : 'bg-[#1a1a1a] text-[#555] border-[#222] hover:text-[#888]'}`}
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -156,21 +165,12 @@ export default function CreatorHub() {
                   </svg>
                 </button>
               )}
-
-              {/* Share */}
               {!isViewOnly && (
                 <button
                   onClick={handleShare}
-                  className="flex items-center gap-1.5 bg-[#ff2d78] hover:bg-[#e0265e] active:scale-[.97] text-white text-sm font-bold px-3.5 py-2 rounded-xl transition-all"
+                  className="flex items-center gap-1.5 bg-[#ff2d78] hover:bg-[#e0265e] active:scale-[.95] text-white text-xs font-black px-3.5 py-2 rounded-xl transition-all tracking-wide"
                 >
-                  {copied ? (
-                    <>
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      Copied!
-                    </>
-                  ) : (
+                  {copied ? '✓ Copied' : (
                     <>
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
@@ -183,60 +183,54 @@ export default function CreatorHub() {
             </div>
           </div>
 
-          {/* Bottom row: view toggle + manage bar */}
-          <div className="flex items-center justify-between gap-3">
-            {/* View toggle */}
-            <div className="flex bg-[#161616] border border-[#222] rounded-xl p-0.5 gap-0.5">
-              <button
-                onClick={() => setViewMode('gallery')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${viewMode === 'gallery' ? 'bg-[#2a2a2a] text-[#f0ebe3]' : 'text-[#555] hover:text-[#888]'}`}
-              >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-                Gallery
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${viewMode === 'list' ? 'bg-[#2a2a2a] text-[#f0ebe3]' : 'text-[#555] hover:text-[#888]'}`}
-              >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                </svg>
-                List
-              </button>
-            </div>
+          {/* Stats + toggle row */}
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-[#3a3a3a] font-bold">
+              {totalLinks} videos · {categories.length} categories
+            </p>
 
-            {/* Manage banner */}
-            {managing && !isViewOnly && (
-              <button
-                onClick={() => setAddingCategory(true)}
-                className="flex items-center gap-1.5 text-xs font-bold bg-[#b8ff3a] text-[#0d0d0d] px-3 py-1.5 rounded-xl active:scale-[.97] transition-all"
-              >
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-                New Category
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {/* View-only pill */}
+              {isViewOnly && (
+                <span className="text-[10px] font-bold text-[#333] tracking-widest uppercase">View only</span>
+              )}
 
-            {/* View-only pill */}
-            {isViewOnly && (
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#444] bg-[#161616] border border-[#222] px-3 py-1.5 rounded-xl">
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                View only
+              {/* Manage new category */}
+              {managing && !isViewOnly && (
+                <button
+                  onClick={() => setAddingCategory(true)}
+                  className="flex items-center gap-1.5 text-xs font-black bg-[#b8ff3a] text-[#0d0d0d] px-3 py-1.5 rounded-xl active:scale-[.97] transition-all"
+                >
+                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  New
+                </button>
+              )}
+
+              {/* View toggle */}
+              <div className="flex bg-[#141414] border border-[#1e1e1e] rounded-xl p-0.5">
+                <button
+                  onClick={() => setViewMode('gallery')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${viewMode === 'gallery' ? 'bg-[#222] text-[#f0ebe3]' : 'text-[#444] hover:text-[#666]'}`}
+                >
+                  Grid
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-black transition-all ${viewMode === 'list' ? 'bg-[#222] text-[#f0ebe3]' : 'text-[#444] hover:text-[#666]'}`}
+                >
+                  List
+                </button>
               </div>
-            )}
+            </div>
           </div>
 
         </div>
       </header>
 
-      {/* ── Main content ───────────────────────────────────────────────────────── */}
-      <main className="max-w-xl mx-auto px-4 py-5 space-y-3 pb-20">
+      {/* ── Content ────────────────────────────────────────────────────────────── */}
+      <main className="max-w-xl mx-auto px-4 pt-5 pb-24 space-y-4">
         <DragDropContext onDragEnd={onDragEnd}>
           {categories.map(category => (
             <CategoryCard
@@ -256,15 +250,14 @@ export default function CreatorHub() {
         </DragDropContext>
 
         {categories.length === 0 && (
-          <div className="py-20 text-center">
-            <p className="text-4xl mb-4">📂</p>
-            <p className="text-base font-bold text-[#444]">No categories yet</p>
-            {!isViewOnly && <p className="text-sm text-[#333] mt-1">Open settings above to add one</p>}
+          <div className="pt-24 text-center">
+            <p className="text-5xl mb-5">📂</p>
+            <p className="text-lg font-black text-[#333]">No categories yet</p>
+            {!isViewOnly && <p className="text-sm text-[#2a2a2a] mt-2">Open settings to add one</p>}
           </div>
         )}
       </main>
 
-      {/* Modals */}
       {addingToCategory && (
         <AddLinkModal
           categoryId={addingToCategory}
@@ -274,16 +267,10 @@ export default function CreatorHub() {
         />
       )}
       {addingCategory && (
-        <AddCategoryModal
-          onAdd={addCategory}
-          onClose={() => setAddingCategory(false)}
-        />
+        <AddCategoryModal onAdd={addCategory} onClose={() => setAddingCategory(false)} />
       )}
       {embedLink && (
-        <EmbedModal
-          link={embedLink}
-          onClose={() => setEmbedLink(null)}
-        />
+        <EmbedModal link={embedLink} onClose={() => setEmbedLink(null)} />
       )}
     </div>
   )
