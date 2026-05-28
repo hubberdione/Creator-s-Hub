@@ -11,10 +11,13 @@ type Props = {
   onDelete: () => void
 }
 
-function getEmbedUrl(url: string): string | null {
+function getInstagramInfo(url: string): { type: string; shortcode: string; embedUrl: string; thumb: string } | null {
   const match = url.match(/instagram\.com\/(p|reel|tv)\/([A-Za-z0-9_-]+)/)
   if (!match) return null
-  return `https://www.instagram.com/${match[1]}/${match[2]}/embed/`
+  const [, type, shortcode] = match
+  const embedUrl = `https://www.instagram.com/${type}/${shortcode}/embed/`
+  const thumb = `https://image.thum.io/get/width/400/crop/400/viewPort/400x800/${embedUrl}`
+  return { type, shortcode, embedUrl, thumb }
 }
 
 function shortUrl(url: string) {
@@ -29,8 +32,9 @@ function shortUrl(url: string) {
 
 export default function LinkItem({ link, index, isViewOnly, onDelete }: Props) {
   const [showEmbed, setShowEmbed] = useState(false)
+  const [imgError, setImgError] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const embedUrl = getEmbedUrl(link.url)
+  const info = getInstagramInfo(link.url)
 
   async function handleDelete() {
     setDeleting(true)
@@ -68,23 +72,40 @@ export default function LinkItem({ link, index, isViewOnly, onDelete }: Props) {
               </div>
             )}
 
-            {/* Play / close button */}
+            {/* Thumbnail — click to expand embed */}
             <div className={`flex-shrink-0 ${isViewOnly ? 'ml-4' : ''}`}>
               <button
-                onClick={() => embedUrl && setShowEmbed(v => !v)}
-                disabled={!embedUrl}
-                className={`w-[72px] h-[72px] my-3 rounded-2xl bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center shadow-sm shadow-rose-100 transition-all ${
-                  embedUrl ? 'hover:opacity-80 hover:scale-95 active:scale-90' : 'cursor-default'
-                }`}
+                onClick={() => info && setShowEmbed(v => !v)}
+                disabled={!info}
+                className="relative w-[72px] h-[72px] my-3 rounded-2xl overflow-hidden flex-shrink-0 group"
               >
-                {showEmbed ? (
-                  <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                {info && !imgError ? (
+                  <>
+                    <img
+                      src={info.thumb}
+                      alt=""
+                      onError={() => setImgError(true)}
+                      className="w-full h-full object-cover"
+                    />
+                    {/* play overlay */}
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                      {showEmbed ? (
+                        <svg className="w-4 h-4 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      ) : (
+                        <svg className="w-6 h-6 text-white drop-shadow ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                        </svg>
+                      )}
+                    </div>
+                  </>
                 ) : (
-                  <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                  </svg>
+                  <div className="w-full h-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center shadow-sm shadow-rose-100">
+                    <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                    </svg>
+                  </div>
                 )}
               </button>
             </div>
@@ -100,11 +121,6 @@ export default function LinkItem({ link, index, isViewOnly, onDelete }: Props) {
                 {link.description}
               </a>
               <p className="text-xs text-gray-400 mt-1 truncate">{shortUrl(link.url)}</p>
-              {embedUrl && (
-                <p className="text-[10px] text-rose-300 mt-0.5">
-                  {showEmbed ? 'tap ▶ to collapse' : 'tap ▶ to preview'}
-                </p>
-              )}
             </div>
 
             {/* Delete */}
@@ -131,11 +147,11 @@ export default function LinkItem({ link, index, isViewOnly, onDelete }: Props) {
             )}
           </div>
 
-          {/* Inline embed */}
-          {showEmbed && embedUrl && (
+          {/* Expanded embed */}
+          {showEmbed && info && (
             <div className="px-4 pb-4">
               <iframe
-                src={embedUrl}
+                src={info.embedUrl}
                 className="w-full rounded-2xl"
                 style={{ minHeight: 480, border: 'none' }}
                 allowFullScreen
