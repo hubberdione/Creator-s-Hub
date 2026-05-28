@@ -391,42 +391,43 @@ export default function BriefPage({ onEnter }: Props) {
                   <div className="space-y-2">
                     <div className="border border-[#ff2d78]/20 rounded-xl px-4 py-3">
                       <p className="text-xs font-bold text-[#ff2d78] mb-1.5">IF YOU USED Q1 – Q5 (Toy Questions)</p>
-                      <p className="text-sm text-[#888] leading-relaxed">"Instead of hiding your toys, you'll want to display this one. It packs [Feature, e.g., 10 whisper-quiet speeds] that do all the heavy lifting."</p>
+                      <p className="text-sm text-[#888] leading-relaxed">"Okay but this is literally the Hello Nancy [Product Name] and it's kind of iconic, not gonna lie."</p>
                     </div>
                     <div className="border border-[#b8ff3a]/20 rounded-xl px-4 py-3">
                       <p className="text-xs font-bold text-[#b8ff3a] mb-1.5">IF YOU USED Q6 – Q10 (Funny Confessions)</p>
-                      <p className="text-sm text-[#888] leading-relaxed">"If you want to make noises that confuse your neighbors for all the right reasons, this is your secret weapon. It features [Feature, e.g., air-pulse suction technology]."</p>
+                      <p className="text-sm text-[#888] leading-relaxed">"Anyway, this is what we've been carrying around all day and yes, it's from Hello Nancy, and yes it's very much giving [vibe]."</p>
                     </div>
                     <div className="border border-[#ffb830]/20 rounded-xl px-4 py-3">
                       <p className="text-xs font-bold text-[#ffb830] mb-1.5">IF YOU USED Q11 – Q15 (Juicy Debates)</p>
-                      <p className="text-sm text-[#888] leading-relaxed">"Stop faking it or waiting for them to press the right buttons. This toy gets straight to the point in under two minutes."</p>
+                      <p className="text-sm text-[#888] leading-relaxed">"That's exactly the energy Hello Nancy was built for, by the way. Just saying. Check them out. 👀"</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Section 4 — CTA */}
+              {/* Section 4 — Outro */}
               <div className="bg-[#111] border border-[#1e1e1e] rounded-2xl overflow-hidden">
                 <div className="flex items-center gap-3 px-4 py-3.5 border-b border-[#1e1e1e]">
                   <div className="w-7 h-7 rounded-full bg-[#ff2d78] flex items-center justify-center flex-shrink-0">
                     <span className="text-xs font-bold text-white">4</span>
                   </div>
                   <div className="flex-1">
-                    <p className="text-base font-bold text-[#f0ebe3]">The Call-To-Action</p>
+                    <p className="text-base font-bold text-[#f0ebe3]">The Outro</p>
+                    <p className="text-sm text-[#555]">End on your energy — keep it fun</p>
                   </div>
                   <span className="text-xs font-bold text-[#b8ff3a] bg-[#b8ff3a]/10 border border-[#b8ff3a]/20 px-2.5 py-1 rounded-lg">0:45 – 1:00</span>
                 </div>
                 <div className="px-4 py-4 space-y-3">
                   <p className="text-xs font-bold text-[#555] tracking-widest uppercase">Visual Direction</p>
-                  <p className="text-sm text-[#666] italic leading-relaxed">Interviewer hands a free brand gift bag to the best stranger. Pop-up text on screen: "Link in Bio to upgrade your bedroom".</p>
+                  <p className="text-sm text-[#666] italic leading-relaxed">Big reaction to the best answer. Close on the interviewer laughing or shaking their head — high energy, totally genuine.</p>
                   <div className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl px-4 py-3.5 space-y-3">
                     <div>
-                      <p className="text-xs font-bold text-[#ff2d78] mb-1.5">TO THE WINNER</p>
-                      <p className="text-sm text-[#f0ebe3] leading-relaxed">"Since you gave the best answer, you win our bestseller. Go give your partner a night off!"</p>
+                      <p className="text-xs font-bold text-[#ff2d78] mb-1.5">REACT TO THE BEST ANSWER</p>
+                      <p className="text-sm text-[#f0ebe3] leading-relaxed">"That is genuinely the most chaotic thing I've heard all day and I am obsessed with you 😭"</p>
                     </div>
                     <div className="border-t border-[#2a2a2a] pt-3">
-                      <p className="text-xs font-bold text-[#ff2d78] mb-1.5">TO CAMERA</p>
-                      <p className="text-sm text-[#f0ebe3] leading-relaxed">"Stop settling for mediocre. Hit the link in our bio to grab yours before we sell out again. Your bedroom will thank you."</p>
+                      <p className="text-xs font-bold text-[#ff2d78] mb-1.5">CLOSE TO CAMERA</p>
+                      <p className="text-sm text-[#f0ebe3] leading-relaxed">"Follow us because we are going back out there and it only gets more unhinged from here. You've been warned. 🫶"</p>
                     </div>
                   </div>
                 </div>
@@ -435,25 +436,30 @@ export default function BriefPage({ onEnter }: Props) {
               {/* Production Checklist */}
               <div className="bg-[#0f0f1a] border border-[#3d1a5e]/50 rounded-2xl overflow-hidden">
                 <div className="px-4 py-4 border-b border-[#3d1a5e]/30">
-                  <p className="text-base font-bold text-[#f0ebe3]">🚀 Production Checklist</p>
-                  <p className="text-sm text-[#666] mt-1">Set yourself up before the shoot</p>
+                  <p className="text-base font-bold text-[#f0ebe3]">🚀 Creator Checklist</p>
+                  <p className="text-sm text-[#666] mt-1">Set yourself up for the best content</p>
                 </div>
                 <div className="divide-y divide-[#1e1e2e]">
                   {[
                     {
                       icon: '🍑',
                       title: 'The "Censored" Prop',
-                      body: 'Paste a giant funny sticker (peach 🍑 or banana 🍌 emoji) over the actual toy on camera. Creates curiosity and keeps TikTok/Reels from flagging the video.',
+                      body: 'Hold a prop with a funny sticker (peach 🍑 or banana 🍌) instead of the actual product on camera. Builds curiosity and keeps TikTok/Reels happy.',
                     },
                     {
-                      icon: '🎁',
-                      title: 'Giveaway Bags',
-                      body: 'Have 5–10 branded gift bags ready to reward the funniest participants. People will answer anything for free high-quality merch!',
+                      icon: '🎭',
+                      title: 'Let Them Be Themselves',
+                      body: 'Don\'t over-direct. The funniest, most shareable moments come from real, unfiltered reactions — just ask the question and get out of the way.',
+                    },
+                    {
+                      icon: '✂️',
+                      title: 'Aim for 3 Reactions Per Question',
+                      body: 'Film at least 3 different people per question. Punchy cuts between very different reactions is what makes these videos addictive to watch.',
                     },
                     {
                       icon: '💬',
                       title: 'Captions',
-                      body: 'Use auto-captions with color changes on words like "seggs," "toy," and "bedroom" to maximize retention.',
+                      body: 'Use auto-captions with colour changes on key words like "seggs," "toy," and "bedroom" to maximise watch time and retention.',
                     },
                   ].map((item, i) => (
                     <div key={i} className="flex items-start gap-3 px-4 py-4">
