@@ -53,17 +53,38 @@ const DAYS = [
   },
 ]
 
+const QUESTIONS = [
+  { q: 'What\'s the most spontaneous thing you\'ve done this year?', emoji: '⚡' },
+  { q: 'If your style had a theme song, what would it be?',           emoji: '🎵' },
+  { q: 'What\'s the best compliment you\'ve ever received?',          emoji: '💌' },
+  { q: 'What\'s your go-to confidence move before walking into a room?', emoji: '💃' },
+  { q: 'Describe your vibe in 3 emojis — go!',                        emoji: '✨' },
+  { q: 'What\'s something people always notice about you that surprises you?', emoji: '👀' },
+  { q: 'Most daring thing you\'ve ever worn?',                         emoji: '🔥' },
+  { q: 'Who\'s your ultimate hype person in real life?',               emoji: '🫶' },
+  { q: 'What\'s your secret talent that would shock people here?',     emoji: '🎭' },
+  { q: 'What are you most excited about right now — like genuinely?',  emoji: '🌟' },
+  { q: 'What\'s the best thing that happened to you this week?',       emoji: '🎉' },
+  { q: 'Describe Miami Swim Week in one word.',                         emoji: '🌊' },
+  { q: 'What\'s one bucket list thing you\'re actually doing this year?', emoji: '🗺️' },
+  { q: 'If you could swap wardrobes with anyone here, who would it be?', emoji: '👗' },
+  { q: 'What do you want people to feel when they watch your content?', emoji: '💫' },
+]
+
 export default function BriefPage({ onEnter }: Props) {
-  const [showSchedule, setShowSchedule] = useState(false)
-  const [activeDay, setActiveDay] = useState(0)
+  const [showSchedule,  setShowSchedule]  = useState(false)
+  const [showQuestions, setShowQuestions] = useState(false)
+  const [activeDay,     setActiveDay]     = useState(0)
 
   return (
     <>
       {/* ── Full-page split layout ───────────────────────────── */}
-      <div className="min-h-screen bg-[#0d0d0d] text-[#f0ebe3] flex flex-col md:flex-row">
+      {/* flex-col-reverse: on mobile, RIGHT panel (welcome) shows FIRST at top */}
+      {/* md:flex-row: on desktop, LEFT=brief, RIGHT=welcome (normal order)     */}
+      <div className="min-h-screen bg-[#0d0d0d] text-[#f0ebe3] flex flex-col-reverse md:flex-row">
 
-        {/* LEFT — Brief content */}
-        <div className="flex-1 overflow-y-auto px-5 pt-10 pb-10 md:px-8 md:py-12 md:max-w-[55%]">
+        {/* LEFT — Brief content (shows second on mobile, left on desktop) */}
+        <div className="flex-1 overflow-y-auto px-5 pt-6 pb-10 md:px-8 md:py-12 md:max-w-[55%]">
           <p className="text-[10px] font-bold text-[#b8ff3a] tracking-widest uppercase mb-6">
             LEM Miami Swim Week 2026
           </p>
@@ -107,14 +128,21 @@ export default function BriefPage({ onEnter }: Props) {
               </div>
             </div>
 
+            {/* Get People Talking — with questions button */}
             <div className="bg-[#161616] border border-[#222] rounded-2xl px-4 py-4">
               <div className="flex items-start gap-3">
                 <span className="text-xl mt-0.5">🎤</span>
-                <div>
+                <div className="flex-1">
                   <p className="text-sm font-bold text-[#f0ebe3] mb-1">Get People Talking!</p>
-                  <p className="text-xs text-[#666] leading-relaxed">
+                  <p className="text-xs text-[#666] leading-relaxed mb-3">
                     Start fun conversations on camera! Ask attendees what they're wearing, what they're loving, what brought them here. The best interviews feel like chatting with a new friend 💬
                   </p>
+                  <button
+                    onClick={() => setShowQuestions(true)}
+                    className="inline-flex items-center gap-1.5 bg-[#ff2d78]/10 hover:bg-[#ff2d78]/20 active:scale-[.97] border border-[#ff2d78]/30 text-[#ff2d78] text-[11px] font-bold px-3 py-1.5 rounded-xl transition-all"
+                  >
+                    <span>💬</span> 15 Fun Questions
+                  </button>
                 </div>
               </div>
             </div>
@@ -147,8 +175,8 @@ export default function BriefPage({ onEnter }: Props) {
           </div>
         </div>
 
-        {/* RIGHT — Welcome + CTAs */}
-        <div className="md:w-[45%] md:sticky md:top-0 md:h-screen flex flex-col justify-center px-5 pb-10 pt-6 md:px-10 md:py-12 border-t border-[#1e1e1e] md:border-t-0 md:border-l md:border-[#1e1e1e]">
+        {/* RIGHT — Welcome + CTAs (shows FIRST on mobile via flex-col-reverse) */}
+        <div className="md:w-[45%] md:sticky md:top-0 md:h-screen flex flex-col justify-center px-5 pb-8 pt-10 md:px-10 md:py-12 border-b border-[#1e1e1e] md:border-b-0 md:border-l md:border-[#1e1e1e]">
           <div className="mb-8">
             <p className="text-xs font-bold text-[#555] tracking-widest uppercase mb-3">Day 1 · May 28</p>
             <h1 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight">
@@ -174,7 +202,7 @@ export default function BriefPage({ onEnter }: Props) {
 
       </div>
 
-      {/* Schedule modal */}
+      {/* ── Schedule modal ──────────────────────────────────── */}
       {showSchedule && (
         <div
           className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end"
@@ -223,6 +251,45 @@ export default function BriefPage({ onEnter }: Props) {
                     <div className="flex-1 min-w-0">
                       <span className={`text-sm font-bold ${slot.highlight ? 'text-[#b8ff3a]' : 'text-[#f0ebe3]'}`}>{slot.label}</span>
                       {slot.note && <span className="text-xs text-[#555] ml-2">· {slot.note}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ── 15 Questions modal ──────────────────────────────── */}
+      {showQuestions && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-end"
+          onClick={e => { if (e.target === e.currentTarget) setShowQuestions(false) }}
+        >
+          <div className="bg-[#161616] border-t border-[#2a2a2a] rounded-t-3xl w-full max-h-[85vh] flex flex-col">
+
+            <div className="flex items-center justify-between px-5 pt-5 pb-1 flex-shrink-0">
+              <div>
+                <h2 className="text-base font-bold text-[#f0ebe3]">15 Fun Questions 💬</h2>
+                <p className="text-[11px] text-[#555] mt-0.5">Ask these on camera to spark great convos</p>
+              </div>
+              <button onClick={() => setShowQuestions(false)} className="p-1.5 rounded-xl text-[#555] hover:text-[#888] hover:bg-[#222] transition-colors">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="overflow-y-auto flex-1 px-5 pt-4 pb-8">
+              <div className="space-y-2">
+                {QUESTIONS.map((item, i) => (
+                  <div key={i} className="bg-[#111] border border-[#1e1e1e] rounded-2xl px-4 py-3.5 flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-[#ff2d78]/10 border border-[#ff2d78]/20 flex items-center justify-center">
+                      <span className="text-[10px] font-bold text-[#ff2d78]">{i + 1}</span>
+                    </div>
+                    <div className="flex-1">
+                      <span className="text-xs leading-relaxed text-[#f0ebe3]">{item.emoji} {item.q}</span>
                     </div>
                   </div>
                 ))}
