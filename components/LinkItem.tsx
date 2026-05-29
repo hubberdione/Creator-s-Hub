@@ -108,7 +108,7 @@ export default function LinkItem({ link, index, isViewOnly, onDelete, onEdit }: 
                       <div className="absolute inset-0 bg-[#222] animate-pulse" />
                     )}
                     <img
-                      src={info.thumb}
+                      src={info.thumb ?? undefined}
                       alt=""
                       onLoad={() => setImgLoaded(true)}
                       onError={() => setImgError(true)}

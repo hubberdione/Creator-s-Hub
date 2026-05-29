@@ -2,7 +2,8 @@ export type Platform = 'instagram' | 'tiktok' | 'youtube' | 'other'
 
 export type LinkInfo = {
   embedUrl: string | null
-  thumb: string
+  /** null → no image available, show platform branded fallback card */
+  thumb: string | null
   platform: Platform
   openUrl: string
 }
@@ -13,28 +14,27 @@ export function getLinkInfo(url: string): LinkInfo {
   // ── Instagram (post / reel / tv) ──────────────────────────────────────────
   const ig = clean.match(/instagram\.com\/(p|reel|tv)\/([A-Za-z0-9_-]+)/)
   if (ig) {
-    const embedUrl = `https://www.instagram.com/${ig[1]}/${ig[2]}/embed/`
     return {
       platform: 'instagram',
-      embedUrl,
+      embedUrl: `https://www.instagram.com/${ig[1]}/${ig[2]}/embed/`,
       openUrl: `https://www.instagram.com/${ig[1]}/${ig[2]}/`,
-      thumb: `https://image.thum.io/get/width/400/crop/400/viewPort/400x800/${embedUrl}`,
+      thumb: null, // Instagram blocks all third-party thumbnail access → branded fallback
     }
   }
 
   // ── TikTok (standard @user/video/ID) ──────────────────────────────────────
   const tt = clean.match(/tiktok\.com\/@[\w.]+\/video\/(\d+)/)
   if (tt) {
-    const embedUrl = `https://www.tiktok.com/embed/v2/${tt[1]}`
     return {
       platform: 'tiktok',
-      embedUrl,
+      embedUrl: `https://www.tiktok.com/embed/v2/${tt[1]}`,
       openUrl: clean,
-      thumb: `https://image.thum.io/get/width/400/crop/400/viewPort/400x800/${embedUrl}`,
+      // Our /api/thumb route proxies TikTok's oEmbed API to get the real CDN thumbnail
+      thumb: `/api/thumb?url=${encodeURIComponent(clean)}`,
     }
   }
 
-  // ── YouTube (watch, shorts, youtu.be) ─────────────────────────────────────
+  // ── YouTube (watch / shorts / youtu.be) ───────────────────────────────────
   const yt = clean.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]+)/)
   if (yt) {
     const id = yt[1]
@@ -42,7 +42,6 @@ export function getLinkInfo(url: string): LinkInfo {
       platform: 'youtube',
       embedUrl: `https://www.youtube.com/embed/${id}?rel=0&modestbranding=1`,
       openUrl: `https://www.youtube.com/watch?v=${id}`,
-      // Direct YouTube thumbnail CDN — fast and reliable
       thumb: `https://img.youtube.com/vi/${id}/hqdefault.jpg`,
     }
   }
@@ -52,6 +51,6 @@ export function getLinkInfo(url: string): LinkInfo {
     platform: 'other',
     embedUrl: null,
     openUrl: clean,
-    thumb: `https://image.thum.io/get/width/400/crop/400/${clean}`,
+    thumb: null,
   }
 }

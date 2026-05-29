@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { Link } from '@/lib/supabase'
-import { getLinkInfo } from '@/lib/linkInfo'
+import { getLinkInfo, Platform } from '@/lib/linkInfo'
 
 type Props = {
   link: Link
@@ -10,6 +10,40 @@ type Props = {
   onDelete: () => void
   onEdit: (id: string, description: string, url: string) => Promise<void>
   onPreview: (link: Link) => void
+}
+
+// Platform brand colours for the fallback card
+const PLATFORM_BG: Record<Platform, string> = {
+  instagram: 'linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%)',
+  tiktok:    'linear-gradient(135deg, #010101 0%, #1a1a2e 100%)',
+  youtube:   'linear-gradient(135deg, #ff0000 0%, #cc0000 100%)',
+  other:     'linear-gradient(135deg, #1e1e1e 0%, #111 100%)',
+}
+
+const PLATFORM_LABEL: Record<Platform, string> = {
+  instagram: 'Instagram',
+  tiktok:    'TikTok',
+  youtube:   'YouTube',
+  other:     'Video',
+}
+
+function BrandedCard({ platform }: { platform: Platform }) {
+  return (
+    <div
+      className="absolute inset-0 flex flex-col items-center justify-center gap-2"
+      style={{ background: PLATFORM_BG[platform] }}
+    >
+      {/* Play icon */}
+      <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+        <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+        </svg>
+      </div>
+      <span className="text-[9px] font-bold text-white/60 tracking-widest uppercase">
+        {PLATFORM_LABEL[platform]}
+      </span>
+    </div>
+  )
 }
 
 export default function GalleryItem({ link, isViewOnly, onDelete, onEdit, onPreview }: Props) {
@@ -46,6 +80,7 @@ export default function GalleryItem({ link, isViewOnly, onDelete, onEdit, onPrev
   }
 
   const THUMB_W = editing ? 180 : 130
+  const hasThumb = !!info.thumb
 
   return (
     <div
@@ -59,34 +94,39 @@ export default function GalleryItem({ link, isViewOnly, onDelete, onEdit, onPrev
         className="group relative w-full block overflow-hidden rounded-2xl bg-[#1a1a1a] active:scale-[.97] transition-transform duration-150"
         style={{ aspectRatio: '9/16' }}
       >
-        {/* Shimmer */}
-        {!imgLoaded && !imgError && (
-          <div className="absolute inset-0 bg-gradient-to-b from-[#1e1e1e] to-[#161616] animate-pulse" />
-        )}
+        {hasThumb ? (
+          <>
+            {/* Shimmer while loading */}
+            {!imgLoaded && !imgError && (
+              <div className="absolute inset-0 bg-gradient-to-b from-[#1e1e1e] to-[#141414] animate-pulse" />
+            )}
 
-        {!imgError ? (
-          <img
-            src={info.thumb}
-            alt=""
-            onLoad={() => setImgLoaded(true)}
-            onError={() => setImgError(true)}
-            className={`w-full h-full object-cover transition-all duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0'} group-active:scale-105`}
-          />
+            {/* Actual thumbnail image */}
+            {!imgError ? (
+              <img
+                src={info.thumb!}
+                alt=""
+                onLoad={() => setImgLoaded(true)}
+                onError={() => setImgError(true)}
+                className={`w-full h-full object-cover transition-opacity duration-300 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+              />
+            ) : (
+              // Image failed → platform branded card
+              <BrandedCard platform={info.platform} />
+            )}
+          </>
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-[#ff2d78] via-[#d4245f] to-[#8b0a35] flex items-center justify-center">
-            <svg className="w-8 h-8 text-white/80 ml-1" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-            </svg>
-          </div>
+          // No thumb URL at all → platform branded card immediately (no flicker)
+          <BrandedCard platform={info.platform} />
         )}
 
-        {/* Gradient overlay — always on, darker at bottom */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+        {/* Gradient overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-        {/* Play button — bottom centre */}
+        {/* Play button */}
         {!editing && (
           <div className="absolute bottom-3 left-0 right-0 flex items-center justify-center">
-            <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all duration-200 group-active:scale-110 group-active:bg-white/30">
+            <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all duration-150 group-active:scale-110 group-active:bg-white/30">
               <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
               </svg>
@@ -95,7 +135,7 @@ export default function GalleryItem({ link, isViewOnly, onDelete, onEdit, onPrev
         )}
       </button>
 
-      {/* Caption */}
+      {/* Caption / edit form */}
       <div className="mt-2 px-0.5">
         {editing ? (
           <div className="space-y-1.5">
@@ -125,17 +165,17 @@ export default function GalleryItem({ link, isViewOnly, onDelete, onEdit, onPrev
           </div>
         ) : (
           <>
-            <p className="text-xs font-bold text-[#666] line-clamp-2 leading-snug">{link.description}</p>
+            <p className="text-xs font-bold text-[#555] line-clamp-2 leading-snug">{link.description}</p>
             {!isViewOnly && (
               <div className="flex items-center gap-1 mt-1.5">
                 <button onClick={() => setEditing(true)}
-                  className="p-1 rounded-lg text-[#333] hover:text-[#b8ff3a] hover:bg-[#b8ff3a]/5 transition-colors" title="Edit">
+                  className="p-1 rounded-lg text-[#2a2a2a] hover:text-[#b8ff3a] hover:bg-[#b8ff3a]/5 transition-colors">
                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                 </button>
                 <button onClick={handleDelete} disabled={deleting}
-                  className="p-1 rounded-lg text-[#333] hover:text-[#ff2d78] hover:bg-[#ff2d78]/5 transition-colors disabled:opacity-40" title="Delete">
+                  className="p-1 rounded-lg text-[#2a2a2a] hover:text-[#ff2d78] hover:bg-[#ff2d78]/5 transition-colors disabled:opacity-40">
                   {deleting ? (
                     <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
